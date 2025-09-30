@@ -1,0 +1,16 @@
+repos:
+- repo: https://github.com/astral-sh/uv-pre-commit
+  rev: 0.8.22
+  hooks:
+    - id: uv-lock       # update the lockfile
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.13.2
+  hooks:
+    - id: ruff-check    # run the linter
+    - id: ruff-format   # run the formatter
+
+- repo: https://github.com/RobertCraigie/pyright-python
+  rev: v1.1.405
+  hooks:
+  - id: pyright         # run the typechecker

@@ -1,0 +1,23 @@
+[project]
+name = "fastapi-test"
+version = "0.1.0"
+description = "fastapi-test project"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "rich>=14.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pyright>=1.1.405",
+    "pytest>=8.4.2",
+    "ruff>=0.13.2",
+]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__"]
+venvPath = "."
+venv = ".venv"
