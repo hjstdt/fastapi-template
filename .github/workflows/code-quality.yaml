@@ -1,0 +1,48 @@
+name: python code quality
+
+on: [push]
+
+jobs:
+  lockfile:
+    name: lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: uv lock --check
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    needs: [lockfile]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: uv run ruff check
+
+  format:
+    name: format
+    runs-on: ubuntu-latest
+    needs: [lockfile]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: uv run ruff format --check
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    needs: [lockfile]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: uv run mypy src/ test/
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: [lockfile]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: uv run pytest --cov src/

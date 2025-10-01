@@ -1,34 +1,53 @@
-.PHONY: upgrade install lint format typecheck test run ulean check
+.DEFAULT_GOAL := help
 
+.PHONY: help
+help:
+	@grep -E '^[a-zA-Z_-]+:' Makefile | grep -v '\.PHONY' | cut -d: -f1 
+
+.PHONY: upgrade
 upgrade:
-	@echo "upgrading all tools..."
 	uv self update
 	pre-commit autoupdate
 	uv sync --upgrade
-	@echo "✓ everything updated!"
 
+.PHONY: install
 install:
 	uv sync
 	uv run pre-commit install
 
-format:
-	uv run ruff format .
+.PHONY: lockfile
+lockfile:
+	uv lock --check
 
+.PHONY: lint
 lint:
-	uv run ruff check .
+	uv run ruff check
 
+.PHONY: format
+format:
+	uv run ruff format
+
+.PHONY: typecheck
 typecheck:
-	uv run pyright
+	uv run mypy
 
+.PHONY: test
 test:
-	uv run pytest
+	uv run pytest --cov src/
 
-run:
-	uv run src/main.py
+.PHONY: check
+check: lockfile lint format typecheck test
+	@echo "✓ all checks passed!"
 
+.PHONY: pre-commit
+pre-commit:
+	uv run pre-commit run --all-files
+
+.PHONY: run
+run: check
+	uv run uvicorn src.api.service.api:app --reload
+
+.PHONY: clean
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 
-	rm -rf .venv .pytest_cache .ruff_cache
-
-check: lint typecheck test
-	@echo "✓ all checks passed!"
+	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache .coverage

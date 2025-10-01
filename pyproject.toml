@@ -2,22 +2,37 @@
 name = "fastapi-test"
 version = "0.1.0"
 description = "fastapi-test project"
-readme = "README.md"
-requires-python = ">=3.13"
+requires-python = "==3.13.*"
+
 dependencies = [
-    "rich>=14.1.0",
+    "fastapi>=0.118.0",
 ]
 
 [dependency-groups]
 dev = [
+    "fastapi[standard]>=0.118.0",
+    "mypy>=1.18.2",
     "pre-commit>=4.3.0",
-    "pyright>=1.1.405",
     "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
     "ruff>=0.13.2",
 ]
 
-[tool.pyright]
-include = ["src"]
-exclude = ["**/__pycache__"]
-venvPath = "."
-venv = ".venv"
+# tools
+
+[tool.ruff]
+src = ["src/", "test/"]
+line-length = 120
+
+[tool.mypy]
+mypy_path = ["src"]
+files = ["src", "test"]
+strict = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src/"]
+
+[tool.coverage.run]
+omit = [
+    "*/__init__.py"
+]
