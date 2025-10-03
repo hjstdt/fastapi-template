@@ -1,17 +1,23 @@
+# read configuration
+ifneq (,$(wildcard .env))
+    include .env
+    export
+endif
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | grep -v '\.PHONY' | cut -d: -f1 
 
-.PHONY: upgrade
-upgrade:
+.PHONY: update
+update:
 	uv self update
-	pre-commit autoupdate
+	uv run pre-commit autoupdate
 	uv sync --upgrade
 
 .PHONY: install
-install:
+install: update
 	uv sync
 	uv run pre-commit install
 
@@ -43,11 +49,24 @@ check: lockfile lint format typecheck test
 pre-commit:
 	uv run pre-commit run --all-files
 
+.PHONY:
+dev: check
+	uv run uvicorn src.fastapi_test.app:app --host $(HOST) --port $(PORT) --reload
+
 .PHONY: run
 run: check
-	uv run uvicorn src.fastapi_test.app:app --reload
+	uv run uvicorn src.fastapi_test.app:app --host $(HOST) --port $(PORT)
+
+.PHONY: docker-build
+docker-build: check
+	docker build . -t ${IMAGE_NAME}
+
+.PHONY: docker_run
+docker-run: docker-build
+	docker run -p ${HOST}:${PORT}:${PORT} --env-file .env ${IMAGE_NAME}
 
 .PHONY: clean
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 
 	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache .coverage dist
+	docker image rm -f $$(docker images ${IMAGE_NAME} -q) 2>/dev/null || true

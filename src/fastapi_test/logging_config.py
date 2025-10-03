@@ -1,4 +1,4 @@
-# src/fastapi_test/app_logging.py
+# src/fastapi_test/logging_config.py
 import json
 import logging
 import sys
