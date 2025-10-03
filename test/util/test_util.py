@@ -1,4 +1,4 @@
-from util import get_random_int, get_random_string
+from fastapi_test.util import get_random_int, get_random_string
 
 
 def test_get_random_int() -> None:

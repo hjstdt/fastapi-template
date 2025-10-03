@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from ..model.response import MessageResponse
+from fastapi_test.model import MessageResponse
 
 
 app = FastAPI()

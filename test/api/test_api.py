@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
-from api import app, MessageResponse
+from fastapi_test.model import MessageResponse
+from fastapi_test.app import app
 
 
 client = TestClient(app)

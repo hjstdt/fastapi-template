@@ -18,6 +18,10 @@ dev = [
     "ruff>=0.13.2",
 ]
 
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
 # tools
 
 [tool.ruff]
@@ -33,6 +37,7 @@ strict = true
 pythonpath = ["src/"]
 
 [tool.coverage.run]
+parallel = true
 omit = [
     "*/__init__.py"
 ]

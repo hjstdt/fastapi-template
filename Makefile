@@ -45,9 +45,9 @@ pre-commit:
 
 .PHONY: run
 run: check
-	uv run uvicorn src.api.service.api:app --reload
+	uv run uvicorn src.fastapi_test.app:app --reload
 
 .PHONY: clean
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 
-	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache .coverage
+	rm -rf .venv .pytest_cache .ruff_cache .mypy_cache .coverage dist
