@@ -51,11 +51,11 @@ pre-commit:
 
 .PHONY:
 dev: check
-	uv run uvicorn src.fastapi_test.app:app --host $(HOST) --port $(PORT) --reload
+	uv run uvicorn src.fastapi_template.app:app --host $(HOST) --port $(PORT) --reload
 
 .PHONY: run
 run: check
-	uv run uvicorn src.fastapi_test.app:app --host $(HOST) --port $(PORT)
+	uv run uvicorn src.fastapi_template.app:app --host $(HOST) --port $(PORT)
 
 .PHONY: docker-build
 docker-build: check

@@ -12,4 +12,7 @@ wheels/
 .ruff_cache
 .pytest_cache
 .mypy_cache
+
+# env files
 .env
+skaffold.env

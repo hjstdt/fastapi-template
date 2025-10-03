@@ -2,10 +2,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False, extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
 
-    app_name: str = "FastAPI-test"
-    app_description: str = "FastAPI-test application"
+    app_name: str = "FastAPI-example"
+    app_description: str = "FastAPI-example application"
     app_version: str = "0.0.1"
     environment: str = "dev"
 

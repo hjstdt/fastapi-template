@@ -3,9 +3,9 @@ from typing import AsyncGenerator
 from fastapi import FastAPI, APIRouter
 import logging
 
-from fastapi_test.app_config import settings
-from fastapi_test.logging_config import setup_logging
-from fastapi_test.router import health, example
+from fastapi_template.app_config import settings
+from fastapi_template.logging_config import setup_logging
+from fastapi_template.router import health, example
 
 setup_logging(log_level=settings.log_level.upper())
 logger = logging.getLogger(__name__)

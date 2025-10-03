@@ -1,0 +1,38 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+
+metadata:
+  name: fastapi-template
+
+build:
+  artifacts:
+    - image: hjestaedt.dev/fastapi-template
+      docker:
+        dockerfile: Dockerfile
+
+manifests:
+  kustomize:
+    paths:
+      - k8s/overlays/local
+
+deploy:
+  kubectl: { }
+
+portForward:
+  - resourceType: deployment
+    resourceName: fastapi-template
+    port: 8000
+    localPort: 8000
+
+profiles:
+  - name: local
+    manifests:
+      kustomize:
+        paths:
+          - k8s/overlays/local
+
+  - name: lab
+    manifests:
+      kustomize:
+        paths:
+          - k8s/overlays/lab
