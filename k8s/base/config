@@ -1,5 +1,5 @@
-APP_NAME=FastAPI Example
-APP_DESCRIPTION=FastAPI example application
+APP_NAME=FastAPI template
+APP_DESCRIPTION=FastAPI template
 APP_VERSION=0.1.0
 API_PREFIX=/api/v1
 HOST=0.0.0.0
