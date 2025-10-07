@@ -6,5 +6,9 @@
         "**/.pytest_cache": true,
         "**/.mypy_cache": true,
         "**/.coverage": true,
-    }
+    },
+    "cSpell.words": [
+        "mypy",
+        "pytest"
+    ]
 }

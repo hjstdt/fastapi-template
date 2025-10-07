@@ -1,28 +1,30 @@
-# read configuration
+# configuration (from .env)
+
 ifneq (,$(wildcard .env))
     include .env
     export
 endif
 
-.DEFAULT_GOAL := help
+# help
 
+.DEFAULT_GOAL := help
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | grep -v '\.PHONY' | cut -d: -f1 
 
-.PHONY: update
-update:
-	uv self update
-	uv run pre-commit autoupdate
-	uv sync --upgrade
+# package management
 
-.PHONY: install
-install: update
-	uv sync
+.PHONY: update-dependencies
+update-dependencies:
+	uv self update
+	uv sync --upgrade
+	uv run pre-commit autoupdate
 	uv run pre-commit install
 
-.PHONY: lockfile
-lockfile:
+# code quality
+
+.PHONY: check-lockfile-consistency
+check-lockfile-consistency:
 	uv lock --check
 
 .PHONY: lint
@@ -33,37 +35,55 @@ lint:
 format:
 	uv run ruff format
 
-.PHONY: typecheck
-typecheck:
+.PHONY: type-check
+type-check:
 	uv run mypy
 
 .PHONY: test
-test:
+test: type-check
 	uv run pytest --cov src/
 
-.PHONY: check
-check: lockfile lint format typecheck test
-	@echo "✓ all checks passed!"
+.PHONY: run-checks
+run-checks: check-lockfile-consistency lint format type-check test
+	@echo "all checks passed!"
 
-.PHONY: pre-commit
-pre-commit:
+# pre-commit hooks
+
+.PHONY: install-pre-commit-hooks
+install-pre-commit-hooks: update
+	uv run pre-commit install
+
+.PHONY: update-pre-commit-hooks
+update-pre-commit-hooks:
+	uv run pre-commit autoupdate
+
+.PHONY: run-pre-commit-hooks
+run-pre-commit-hooks: update-pre-commit-hooks
 	uv run pre-commit run --all-files
 
-.PHONY:
-dev: check
+# local development
+
+.PHONY: run-dev
+run-dev: run-checks
 	uv run uvicorn src.fastapi_template.app:app --host $(HOST) --port $(PORT) --reload
 
-.PHONY: run
-run: check
-	uv run uvicorn src.fastapi_template.app:app --host $(HOST) --port $(PORT)
+# docker
 
 .PHONY: docker-build
-docker-build: check
+docker-build: run-checks
 	docker build . -t ${IMAGE_NAME}
 
-.PHONY: docker_run
+.PHONY: docker-run
 docker-run: docker-build
 	docker run -p ${HOST}:${PORT}:${PORT} --env-file .env ${IMAGE_NAME}
+
+# kubernetes
+
+.PHONY: kubernetes-deploy
+kubernetes-deploy: run-checks
+	skaffold run
+
+# cleanup
 
 .PHONY: clean
 clean:
