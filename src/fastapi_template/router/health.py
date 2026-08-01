@@ -1,5 +1,6 @@
-from fastapi import APIRouter
 import logging
+
+from fastapi import APIRouter
 
 from fastapi_template.model.response import HealthResponse
 
