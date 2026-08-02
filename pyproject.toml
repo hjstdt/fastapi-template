@@ -3,7 +3,7 @@ name = "fastapi-template"
 description = "FastAPI template"
 # version is not maintained. the real version comes from the git tag,
 # which is set by semantic-release, see .releaserc.
-version = "0.0.0"
+version = "1.0.0"
 requires-python = ">=3.13"
 
 dependencies = [
